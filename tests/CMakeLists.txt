@@ -24,6 +24,7 @@ include(validator/tests.cmake)
 include(variable/tests.cmake)
 include(version/tests.cmake)
 include(resolve_imports/tests.cmake)
+include(mathprocessing/tests.cmake)
 
 set(test_path)
 list(APPEND test_path $ENV{PATH} $<TARGET_FILE_DIR:cellml>)
