@@ -109,18 +109,6 @@ public:
      *  - there is no stored model; or
      *  - there is no item with the given @p id.
      *
-     * The item returned is an @ref AnyCellmlElement object containing both:
-     *  - a type (as a @ref CellmlElementType enum); and
-     *  - an item, which can be a
-     *    - @ref Component,
-     *    - @ref ImportSource,
-     *    - @ref Model,
-     *    - @ref Reset,
-     *    - @ref Units,
-     *    - @ref UnitsItem,
-     *    - @ref Variable; or a
-     *    - @ref VariablePair.
-     *
      * @param id A @c std::string representing the @p id to retrieve.
      * @param index The index of the item to return from the list of items with @p id.
      *
