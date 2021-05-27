@@ -71,13 +71,13 @@ public:
     ModelPtr model() const;
 
     /**
-     * @brief Return the item at @p index with the @p id.
+     * @brief Return the item with the @p id.
      *
-     * From a list of items extracted from the stored model find and return the item with
-     * the given @p id string and @p index.  The default @p index is zero if none is given.
+     * From the list of items extracted from the stored model find and return the item with
+     * the given @p id string.
      *
      * Issues are logged if:
-     *  - there is no stored model,
+     *  - there is no stored model;
      *  - there is no item with the given @p id; or
      *  - there are multiple items with the given @p id.
      *
@@ -94,13 +94,57 @@ public:
      *    - @ref VariablePair.
      *
      * @param id A @c std::string representing the @p id to retrieve.
+     *
+     * @return An @ref AnyCellmlElement item.
+     */
+    AnyCellmlElementPtr item(const std::string &id);
+
+    /**
+     * @brief Return the item at @p index with the @p id.
+     *
+     * From a list of items extracted from the stored model find and return the item with
+     * the given @p id string and @p index.
+     *
+     * Issues are logged if:
+     *  - there is no stored model; or
+     *  - there is no item with the given @p id.
+     *
+     * The item returned is an @ref AnyCellmlElement object containing both:
+     *  - a type (as a @ref CellmlElementType enum); and
+     *  - an item, which can be a
+     *    - @ref Component,
+     *    - @ref ImportSource,
+     *    - @ref Model,
+     *    - @ref Reset,
+     *    - @ref Units,
+     *    - @ref UnitsItem,
+     *    - @ref Variable; or a
+     *    - @ref VariablePair.
+     *
+     * @param id A @c std::string representing the @p id to retrieve.
      * @param index The index of the item to return from the list of items with @p id.
-     *              The defualt index is zero if none is given.
      *
      * @return An @ref AnyCellmlElement item as described in item(const std::string &).
      */
-    AnyCellmlElementPtr item(const std::string &id, size_t index = std::numeric_limits<size_t>::max());
+    AnyCellmlElementPtr item(const std::string& id, size_t index);
 
+    /**
+     * @brief Retrieve a @ref Component with the given @p id string.
+     *
+     * Retrieve a @ref Component that has the given @p id string.
+     *
+     * A @c nullptr will be returned if:
+     *  - no item with the given @p id exists in the stored model;
+     *  - the item with the given @p id is not a component;
+     *  - the @p id does not uniquely identify an item; or
+     *  - the annotator does not have a model attached.
+     *
+     * @param id A @c std::string representing the identifier of the @ref Component to retrieve.
+     *
+     * @return A @ref Component on success otherwise @c nullptr.
+     */
+    ComponentPtr component(const std::string& id);
+    
     /**
      * @brief From a list of items in the stored model with the given @p id string,
      *        this method returns a @ref Component in the @p index position, if it exists.
@@ -118,7 +162,7 @@ public:
      *
      * @return A @ref Component on success otherwise @c nullptr.
      */
-    ComponentPtr component(const std::string &id, size_t index = std::numeric_limits<size_t>::max());
+    ComponentPtr component(const std::string &id, size_t index);
 
     /**
      * @brief From a list of items in the stored model with the given @p id string,

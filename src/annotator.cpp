@@ -535,7 +535,12 @@ bool Annotator::AnnotatorImpl::exists(const std::string &id, size_t index) const
     return true;
 }
 
-AnyCellmlElementPtr Annotator::item(const std::string &id, size_t index)
+AnyCellmlElementPtr Annotator::item(const std::string &id)
+{
+    return mPimpl->exists(id, std::numeric_limits<size_t>::max()) ? std::move(items(id)[realIndex(0)]) : AnyCellmlElement::AnyCellmlElementImpl::create();
+}
+
+AnyCellmlElementPtr Annotator::item(const std::string& id, size_t index)
 {
     return mPimpl->exists(id, index) ? std::move(items(id)[realIndex(index)]) : AnyCellmlElement::AnyCellmlElementImpl::create();
 }
@@ -585,6 +590,16 @@ ComponentPtr Annotator::component(const std::string &id, size_t index)
     mPimpl->update();
     if (mPimpl->exists(id, index)) {
         auto i = items(id).at(realIndex(index));
+        return i->component();
+    }
+    return nullptr;
+}
+
+ComponentPtr Annotator::component(const std::string& id)
+{
+    mPimpl->update();
+    if (mPimpl->exists(id, std::numeric_limits<size_t>::max())) {
+        auto i = items(id).at(realIndex(0));
         return i->component();
     }
     return nullptr;
