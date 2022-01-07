@@ -2731,3 +2731,37 @@ TEST(Units, circularImportDeeperLevelBaseUnits)
 
     EXPECT_FALSE(units1->isBaseUnit());
 }
+
+TEST(Units, validateConnectionsWithBaseUnits)
+{
+    const std::string m =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        "<model xmlns=\"http://www.cellml.org/cellml/2.0#\" name=\"base_units_test\">\n"
+        "  <units name=\"cells\"/>\n"
+        "  <units name=\"cells_per_mm3\">\n"
+        "    <unit units=\"cells\"/>\n"
+        "    <unit units=\"metre\" prefix=\"milli\" exponent=\"-3\"/>"
+        "  </units>\n"
+        "  <component name=\"c1\">\n"
+        "    <variable name=\"c1_v\" units=\"cells_per_mm3\" initial_value=\"100\" interface=\"public\"/>\n"
+        "  </component>\n"
+        "  <component name=\"c2\">\n"
+        "    <variable name=\"c2_v\" units=\"cells_per_mm3\" interface=\"public\"/>\n"
+        "  </component>\n"
+        "  <connection component_1=\"c1\" component_2=\"c2\">\n"
+        "    <map_variables component_1=\"c1_v\" component_2=\"c2_v\"/>\n"
+        "  </connection>\n"
+        "</model>\n";
+
+    std::cout << m << std::endl;
+    libcellml::ParserPtr parser = libcellml::Parser::create();
+    libcellml::ModelPtr model = parser->parseModel(m);
+    printIssues(parser);
+    libcellml::PrinterPtr printer = libcellml::Printer::create();
+    const std::string a = printer->printModel(model);
+    std::cout << a << std::endl;
+    libcellml::ValidatorPtr validator = libcellml::Validator::create();
+    validator->validateModel(model);
+    EXPECT_EQ(size_t(10), validator->issueCount());
+    printIssues(validator);
+}
